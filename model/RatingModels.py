@@ -6,7 +6,7 @@
 @Author :    Jason
 @Date :      2022/4/28 15:54
 @Description  Python version-3.10
-# TODO: 检查x的值是否为None，然后具体决定是初始化还是强转
+
 """
 
 
@@ -44,7 +44,7 @@ class BaseRatingModel(object):
 
     @id.setter
     def id(self, x):
-        self.__id = int(x)
+        self.__id = 0 if x is None else int(x)
 
     @property
     def student_number(self):
@@ -52,7 +52,7 @@ class BaseRatingModel(object):
 
     @student_number.setter
     def student_number(self, x):
-        self.__student_number = str(x)
+        self.__student_number = '' if x is None else str(x)
 
     @property
     def student_name(self):
@@ -60,7 +60,7 @@ class BaseRatingModel(object):
 
     @student_name.setter
     def student_name(self, x):
-        self.__student_name = str(x)
+        self.__student_name = '' if x is None else str(x)
 
     @property
     def major(self):
@@ -68,7 +68,7 @@ class BaseRatingModel(object):
 
     @major.setter
     def major(self, x):
-        self.__major = str(x)
+        self.__major = '' if x is None else str(x)
 
     @property
     def thesis_topic(self):
@@ -76,7 +76,7 @@ class BaseRatingModel(object):
 
     @thesis_topic.setter
     def thesis_topic(self, x):
-        self.__thesis_topic = str(x)
+        self.__thesis_topic = '' if x is None else str(x)
 
     @property
     def scores(self):
@@ -84,7 +84,7 @@ class BaseRatingModel(object):
 
     @scores.setter
     def scores(self, x):
-        self.__scores = list(x)
+        self.__scores = [] if x is None else list(x)
         self.__total_score = sum(self.__scores)
 
     @property
@@ -122,7 +122,7 @@ class CommentScoreModel(BaseRatingModel):
 
     @review_teacher_name.setter
     def review_teacher_name(self, x):
-        self.__review_teacher_name = str(x)
+        self.__review_teacher_name = '' if x is None else str(x)
 
     @property
     def review_teacher_work_number(self):
@@ -130,7 +130,7 @@ class CommentScoreModel(BaseRatingModel):
 
     @review_teacher_work_number.setter
     def review_teacher_work_number(self, x):
-        self.__review_teacher_work_number = str(x)
+        self.__review_teacher_work_number = '' if x is None else str(x)
 
     def __str__(self) -> str:
         return super().__str__() + f"review_teacher_name: {self.__review_teacher_name} review_teacher_work_number:{self.__review_teacher_work_number}";
@@ -162,7 +162,7 @@ class DebateScoreModel(BaseRatingModel):
 
     @debate_group_leader_name.setter
     def debate_group_leader_name(self, x):
-        self.__debate_group_leader_name = str(x)
+        self.__debate_group_leader_name = '' if x is None else str(x)
 
     @property
     def debate_group_secretary_name(self):
@@ -178,7 +178,7 @@ class DebateScoreModel(BaseRatingModel):
 
     @debate_group_member.setter
     def debate_group_member(self, x):
-        self.__debate_group_member = str(x)
+        self.__debate_group_member = '' if x is None else str(x)
 
     def __str__(self) -> str:
         return super().__str__() + f"debate_group_leader_name: {self.__debate_group_leader_name} debate_group_secretary_name:{self.__debate_group_secretary_name} debate_group_member:{self.__debate_group_member}";
@@ -207,7 +207,7 @@ class TeacherScoreModel(BaseRatingModel):
 
     @guidance_teacher_name.setter
     def guidance_teacher_name(self, x):
-        self.__guidance_teacher_name = str(x)
+        self.__guidance_teacher_name = '' if x is None else str(x)
 
     @property
     def guidance_teacher_work_number(self):
@@ -215,7 +215,7 @@ class TeacherScoreModel(BaseRatingModel):
 
     @guidance_teacher_work_number.setter
     def guidance_teacher_work_number(self, x):
-        self.__guidance_teacher_work_number = str(x)
+        self.__guidance_teacher_work_number = '' if x is None else str(x)
 
     def __str__(self) -> str:
         return super().__str__() + f"guidance_teacher_name: {self.__guidance_teacher_name} guidance_teacher_work_number:{self.__guidance_teacher_work_number}";
