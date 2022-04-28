@@ -6,7 +6,7 @@
 @Author :    Jason
 @Date :      2022/4/28 15:54
 @Description  Python version-3.10
-
+# TODO: 检查x的值是否为None，然后具体决定是初始化还是强转
 """
 
 
@@ -197,7 +197,7 @@ class TeacherScoreModel(BaseRatingModel):
     )
 
     def __init__(self):
-        super(DebateScoreModel, self).__init__()
+        super(TeacherScoreModel, self).__init__()
         self.__guidance_teacher_name = ''
         self.__guidance_teacher_work_number = ''
 
