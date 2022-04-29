@@ -52,7 +52,7 @@ TEACHER_SCORE_FILE_NAME_FORMAT = "{}-{}-{}-计科-2022届-毕业设计（论文�
 # 输出路径
 OUTPUT_PATH = Path(__file__).parent.parent / Path("./out")
 # # 按 日期时间 生成子目录
-DATE_CATALOG = OUTPUT_PATH / Path(f'./{datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d-%H-%M-%S")}')
+DATE_CATALOG = OUTPUT_PATH / Path(f'./{datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d-%H%M%S")}')
 # # # 论文评阅评分表 目录
 COMMENT_SCORE_FILE_CATALOG_PATH = DATE_CATALOG / Path("./论文评阅评分")
 DEBATE_SCORE_FILE_CATALOG_PATH = DATE_CATALOG / Path("./答辩评分")
@@ -100,7 +100,8 @@ def generate_word_to_file(rating_model):
     table = document.tables[0]
     # 遍历段落
     for paragraph in document.paragraphs:
-        print(paragraph.style.name, paragraph.text)
+        # 测试
+        # print(paragraph.style.name, paragraph.text)
         temp = paragraph.text
         # 关键字替换
         if MAJOR_KEY in temp:

@@ -13,6 +13,8 @@ from openpyxl import load_workbook
 # Excel 表名称
 from model.RatingModels import CommentScoreModel, DebateScoreModel, TeacherScoreModel
 
+# TODO: 判断无效评分记录，无效则不读取
+
 COMMENT_SCORE_SHEET_NAME = "评阅老师成绩"
 DEBATE_SCORE_SHEET_NAME = "答辩成绩"
 TEACHER_SCORE_SHEET_NAME = "指导老师成绩"
@@ -109,7 +111,8 @@ def get_debate_scores_data(workbook):
         debate_score.debate_group_leader_name = debate_scores_sheet.cell(row, 12).value
         debate_score.debate_group_secretary_name = debate_scores_sheet.cell(row, 13).value
         debate_score.debate_group_member = debate_scores_sheet.cell(row, 14).value
-        print(debate_score)
+        # 测试
+        # print(debate_score)
         debate_scores.append(debate_score)
 
     return debate_scores
@@ -152,7 +155,8 @@ def get_teacher_scores_data(workbook):
         teacher_score.scores = scores
         teacher_score.guidance_teacher_name = teacher_scores_sheet.cell(row, 13).value
         teacher_score.guidance_teacher_work_number = teacher_scores_sheet.cell(row, 14).value
-        print(teacher_score)
+        # 测试
+        # print(teacher_score)
         teacher_scores.append(teacher_score)
 
     return teacher_scores
