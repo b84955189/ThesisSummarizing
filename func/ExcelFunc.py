@@ -8,13 +8,14 @@
 @Description  Python version-3.10
 # TODO: 重构冗余代码
 """
+
 from openpyxl import load_workbook
 
-# Excel 表名称
+from func import CommonTools
 from model.RatingModels import CommentScoreModel, DebateScoreModel, TeacherScoreModel
 
-# TODO: 判断无效评分记录，无效则不读取
 
+# Excel 表名称
 COMMENT_SCORE_SHEET_NAME = "评阅老师成绩"
 DEBATE_SCORE_SHEET_NAME = "答辩成绩"
 TEACHER_SCORE_SHEET_NAME = "指导老师成绩"
@@ -49,6 +50,12 @@ def get_comment_scores_data(workbook):
         comment_score.id = comment_scores_sheet.cell(row, 1).value
         comment_score.student_number = comment_scores_sheet.cell(row, 2).value
         comment_score.student_name = comment_scores_sheet.cell(row, 3).value
+        # 判断该评分记录是否有效，是否值得读入。
+        # 这里主要通过判断是否有学号与姓名来判断
+        # 如果为学号或姓名为空，跳过该评分记录
+        if CommonTools.is_empty_or_none(comment_score.student_number) or CommonTools.is_empty_or_none(
+                comment_score.student_name):
+            continue
         comment_score.major = comment_scores_sheet.cell(row, 4).value
         comment_score.thesis_topic = comment_scores_sheet.cell(row, 5).value
         # 分数
@@ -91,6 +98,12 @@ def get_debate_scores_data(workbook):
         debate_score.id = debate_scores_sheet.cell(row, 1).value
         debate_score.student_number = debate_scores_sheet.cell(row, 2).value
         debate_score.student_name = debate_scores_sheet.cell(row, 3).value
+        # 判断该评分记录是否有效，是否值得读入。
+        # 这里主要通过判断是否有学号与姓名来判断
+        # 如果为学号或姓名为空，跳过该评分记录
+        if CommonTools.is_empty_or_none(debate_score.student_number) or CommonTools.is_empty_or_none(
+                debate_score.student_name):
+            continue
         debate_score.major = debate_scores_sheet.cell(row, 4).value
         debate_score.thesis_topic = debate_scores_sheet.cell(row, 5).value
         # 分数
@@ -134,6 +147,12 @@ def get_teacher_scores_data(workbook):
         teacher_score.id = teacher_scores_sheet.cell(row, 1).value
         teacher_score.student_number = teacher_scores_sheet.cell(row, 2).value
         teacher_score.student_name = teacher_scores_sheet.cell(row, 3).value
+        # 判断该评分记录是否有效，是否值得读入。
+        # 这里主要通过判断是否有学号与姓名来判断
+        # 如果为学号或姓名为空，跳过该评分记录
+        if CommonTools.is_empty_or_none(teacher_score.student_number) or CommonTools.is_empty_or_none(
+                teacher_score.student_name):
+            continue
         teacher_score.major = teacher_scores_sheet.cell(row, 4).value
         teacher_score.thesis_topic = teacher_scores_sheet.cell(row, 5).value
         # 分数
