@@ -10,8 +10,10 @@
 """
 
 
+
 class BaseRatingModel(object):
     """基础评分记录类"""
+    # @property 与 @xx.setter 装饰器 的使用注意使用顺序与名称是否对应。
     __slots__ = (
         # 序号
         "__id",
@@ -233,16 +235,17 @@ def test():
     params_2 = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', '001']
     params_3 = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', 'FeiFei', 'Auro,Jack,HuJian']
     a = CommentScoreModel()
+    print(isinstance(a, CommentScoreModel))
+    a.id = params[0]
+    a.student_number = params[1]
+    a.student_name = params[2]
+    a.major = params[3]
+    a.thesis_topic = params[4]
+    a.scores = params[5]
+    a.review_teacher_name = params[6]
+    a.review_teacher_work_number = params[7]
 
-    # a.id = params[0]
-    # a.student_number = params[1]
-    # a.student_name = params[2]
-    # a.major = params[3]
-    # a.thesis_topic = params[4]
-    # a.scores = params[5]
-    # a.review_teacher_name = params[6]
-    # a.review_teacher_work_number = params[7]
-    #
+
     # b = DebateScoreModel()
     # b.id = params_3[0]
     # b.student_number = params_3[1]
