@@ -91,6 +91,7 @@ def generate_word_to_file(rating_model, date_catalog):
 
     # 因为模板中只有一个表格对象
     table = document.tables[0]
+    # TODO: 一致字体格式
     # 遍历段落
     for paragraph in document.paragraphs:
         # 测试
