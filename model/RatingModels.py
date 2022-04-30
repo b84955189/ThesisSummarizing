@@ -10,7 +10,6 @@
 """
 
 
-
 class BaseRatingModel(object):
     """基础评分记录类"""
     # @property 与 @xx.setter 装饰器 的使用注意使用顺序与名称是否对应。
@@ -102,6 +101,19 @@ class BaseRatingModel(object):
 
     def __repr__(self) -> str:
         return self.__str__()
+
+    def __eq__(self, o: object) -> bool:
+        """
+        重写，以便 == 比较时用
+        """
+        return str(self.__student_number) == str(o.student_number)
+
+    def __hash__(self) -> int:
+        """
+        重写，以便 set 集合用
+        判断 是否同一人
+        """
+        return hash(str(self.__student_number))
 
 
 class CommentScoreModel(BaseRatingModel):
@@ -242,33 +254,7 @@ def test():
     测试方法
     @return: None
     """
-    params = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', '001']
-    params_2 = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', '001']
-    params_3 = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', 'FeiFei', 'Auro,Jack,HuJian']
-    a = CommentScoreModel()
-    print(isinstance(a, CommentScoreModel))
-    a.id = params[0]
-    a.student_number = params[1]
-    a.student_name = params[2]
-    a.major = params[3]
-    a.thesis_topic = params[4]
-    a.scores = params[5]
-    a.review_teacher_name = params[6]
-    a.review_teacher_work_number = params[7]
-
-
-    # b = DebateScoreModel()
-    # b.id = params_3[0]
-    # b.student_number = params_3[1]
-    # b.student_name = params_3[2]
-    # b.major = params_3[3]
-    # b.thesis_topic = params_3[4]
-    # b.scores = params_3[5]
-    # b.debate_group_leader_name = params_3[6]
-    # b.debate_group_secretary_name = params_3[7]
-    # b.debate_group_member = params_3[8]
-    #
-    # print(b)
+    pass
 
 
 if __name__ == "__main__":

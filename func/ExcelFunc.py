@@ -6,7 +6,7 @@
 @Author :    Jason
 @Date :      2022/4/28 19:36
 @Description  Python version-3.10
-# TODO: 重构冗余代码
+TODO: 重构冗余代码
 """
 
 from openpyxl import load_workbook
@@ -39,9 +39,9 @@ def get_comment_scores_data(workbook):
     """
     读 评阅老师成绩 记录
     @param workbook: Excel工作簿对象
-    @return: 评阅老师成绩 记录
+    @return: 评阅老师成绩 记录 - set
     """
-    comment_scores = []
+    comment_scores = set()
     comment_scores_sheet = workbook[COMMENT_SCORE_SHEET_NAME]
     # 跳过评阅老师成绩表 表头
     for row in range(3, comment_scores_sheet.max_row + 1):
@@ -77,7 +77,7 @@ def get_comment_scores_data(workbook):
         comment_score.scores = scores
         comment_score.review_teacher_name = comment_scores_sheet.cell(row, 13).value
         comment_score.review_teacher_work_number = comment_scores_sheet.cell(row, 14).value
-        comment_scores.append(comment_score)
+        comment_scores.add(comment_score)
 
     return comment_scores
 
@@ -86,9 +86,9 @@ def get_debate_scores_data(workbook):
     """
     读 答辩成绩 记录
     @param workbook: Excel工作簿对象
-    @return: 答辩成绩 记录
+    @return: 答辩成绩 记录 - set
     """
-    debate_scores = []
+    debate_scores = set()
     debate_scores_sheet = workbook[DEBATE_SCORE_SHEET_NAME]
 
     # 跳过评阅老师成绩表 表头
@@ -126,8 +126,8 @@ def get_debate_scores_data(workbook):
         debate_score.debate_group_secretary_name = debate_scores_sheet.cell(row, 14).value
         debate_score.debate_group_member = debate_scores_sheet.cell(row, 15).value
         # 测试
-        print(debate_score)
-        debate_scores.append(debate_score)
+        # print(debate_score)
+        debate_scores.add(debate_score)
 
     return debate_scores
 
@@ -136,9 +136,9 @@ def get_teacher_scores_data(workbook):
     """
     读 指导老师成绩 记录
     @param workbook: Excel工作簿对象
-    @return: 指导老师成绩 记录
+    @return: 指导老师成绩 记录 - set
     """
-    teacher_scores = []
+    teacher_scores = set()
     teacher_scores_sheet = workbook[TEACHER_SCORE_SHEET_NAME]
 
     # 跳过评阅老师成绩表 表头
@@ -177,7 +177,7 @@ def get_teacher_scores_data(workbook):
         teacher_score.guidance_teacher_work_number = teacher_scores_sheet.cell(row, 14).value
         # 测试
         # print(teacher_score)
-        teacher_scores.append(teacher_score)
+        teacher_scores.add(teacher_score)
 
     return teacher_scores
 
@@ -188,7 +188,8 @@ def test():
     @return: None
     """
     wb = get_workbook("D:\\Projects\\Python\\ThesisSummarizing\\template\\rating-information.xlsx")
-    get_debate_scores_data(wb)
+    for temp in get_debate_scores_data(wb):
+        print(temp)
     get_teacher_scores_data(wb)
     get_debate_scores_data(wb)
     close_workbook(wb)

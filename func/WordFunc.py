@@ -10,7 +10,6 @@
 """
 import datetime
 from pathlib import Path
-
 from docx import Document
 
 from model.RatingModels import CommentScoreModel, DebateScoreModel, TeacherScoreModel
