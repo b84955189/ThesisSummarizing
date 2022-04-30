@@ -144,6 +144,8 @@ class CommentScoreModel(BaseRatingModel):
 class DebateScoreModel(BaseRatingModel):
     """答辩评分记录类"""
     __slots__ = (
+        # 答辩内容 - 字符串
+        "__debate_content",
         # 答辩组长
         "__debate_group_leader_name",
         # 答辩组秘书 - 字符串
@@ -154,9 +156,18 @@ class DebateScoreModel(BaseRatingModel):
 
     def __init__(self):
         super(DebateScoreModel, self).__init__()
+        self.__debate_content = ''
         self.__debate_group_leader_name = ''
         self.__debate_group_secretary_name = ''
         self.__debate_group_member = ''
+
+    @property
+    def debate_content(self):
+        return self.__debate_content
+
+    @debate_content.setter
+    def debate_content(self, x):
+        self.__debate_content = '' if x is None else str(x)
 
     @property
     def debate_group_leader_name(self):
@@ -183,7 +194,7 @@ class DebateScoreModel(BaseRatingModel):
         self.__debate_group_member = '' if x is None else str(x)
 
     def __str__(self) -> str:
-        return super().__str__() + f"debate_group_leader_name: {self.__debate_group_leader_name} debate_group_secretary_name:{self.__debate_group_secretary_name} debate_group_member:{self.__debate_group_member}";
+        return super().__str__() + f"debate_group_content: {self.__debate_content} debate_group_leader_name: {self.__debate_group_leader_name} debate_group_secretary_name:{self.__debate_group_secretary_name} debate_group_member:{self.__debate_group_member}";
 
     def __repr__(self) -> str:
         return self.__str__()

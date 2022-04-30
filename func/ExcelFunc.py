@@ -121,11 +121,12 @@ def get_debate_scores_data(workbook):
             0 if score_5 is None else int(score_5)
         ]
         debate_score.scores = scores
-        debate_score.debate_group_leader_name = debate_scores_sheet.cell(row, 12).value
-        debate_score.debate_group_secretary_name = debate_scores_sheet.cell(row, 13).value
-        debate_score.debate_group_member = debate_scores_sheet.cell(row, 14).value
+        debate_score.debate_content = debate_scores_sheet.cell(row, 12).value
+        debate_score.debate_group_leader_name = debate_scores_sheet.cell(row, 13).value
+        debate_score.debate_group_secretary_name = debate_scores_sheet.cell(row, 14).value
+        debate_score.debate_group_member = debate_scores_sheet.cell(row, 15).value
         # 测试
-        # print(debate_score)
+        print(debate_score)
         debate_scores.append(debate_score)
 
     return debate_scores
