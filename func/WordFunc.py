@@ -10,7 +10,6 @@
 """
 import datetime
 from pathlib import Path
-
 from docx import Document
 
 from model.RatingModels import CommentScoreModel, DebateScoreModel, TeacherScoreModel
@@ -27,12 +26,17 @@ STU_NUMBER_KEY = "{{学号}}"
 NAME_KEY = "{{姓名}}"
 TOPIC_KEY = "{{题目}}"
 
+# TODO: 调整分数填充方式 - 动态识别
 SCORE_1_KEY = "{{分数1}}"
 SCORE_2_KEY = "{{分数2}}"
 SCORE_3_KEY = "{{分数3}}"
 SCORE_4_KEY = "{{分数4}}"
 SCORE_5_KEY = "{{分数5}}"
 SCORE_6_KEY = "{{分数6}}"
+SCORE_7_KEY = "{{分数7}}"
+SCORE_8_KEY = "{{分数8}}"
+SCORE_9_KEY = "{{分数9}}"
+SCORE_10_KEY = "{{分数10}}"
 
 TOTAL_SCORE_KEY = "{{总分}}"
 YEAR_KEY = "{{年}}"
@@ -53,10 +57,12 @@ TEACHER_SCORE_FILE_NAME_FORMAT = "{}-{}-{}-计科-2022届-毕业设计（论文�
 OUTPUT_PATH = Path(__file__).parent.parent / Path("./out")
 
 
-def generate_word_to_file(rating_model, date_catalog):
+def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher_name, rating_model, date_catalog):
     """
-    生成word文件（docx）
-    # TODO: 生成的每个Word文件名需带有指导老师
+    通过不同评分表生成word文件（docx）
+    @param student_number: 学生学号
+    @param student_name: 学生姓名
+    @param guidance_teacher_name: 指导老师姓名
     @param rating_model: 评分记录实体类
     @param date_catalog: 日期时间 子目录
     @return: None
@@ -72,22 +78,25 @@ def generate_word_to_file(rating_model, date_catalog):
         # exist_ok：只有在目录不存在时创建目录，目录已存在时不会抛出异常。
         comment_score_file_catalog_path.mkdir(parents=True, exist_ok=True)
         output_file_path = comment_score_file_catalog_path / Path(
-            COMMENT_SCORE_FILE_NAME_FORMAT.format("测试老师", rating_model.student_number,
-                                                  rating_model.student_name))
+            COMMENT_SCORE_FILE_NAME_FORMAT.format(guidance_teacher_name,
+                                                  student_number,
+                                                  student_name))
     elif isinstance(rating_model, DebateScoreModel):
         document = Document(DEBATE_SCORE_FILE_PATH)
         debate_score_file_catalog_path = date_catalog / Path("./答辩评分")
         debate_score_file_catalog_path.mkdir(parents=True, exist_ok=True)
         output_file_path = debate_score_file_catalog_path / Path(
-            DEBATE_SCORE_FILE_NAME_FORMAT.format("测试老师", rating_model.student_number,
-                                                 rating_model.student_name))
+            DEBATE_SCORE_FILE_NAME_FORMAT.format(guidance_teacher_name,
+                                                 student_number,
+                                                 student_name))
     elif isinstance(rating_model, TeacherScoreModel):
         document = Document(TEACHER_SCORE_FILE_PATH)
         teacher_score_file_catalog_path = date_catalog / Path("./指导老师评分")
         teacher_score_file_catalog_path.mkdir(parents=True, exist_ok=True)
         output_file_path = teacher_score_file_catalog_path / Path(
-            TEACHER_SCORE_FILE_NAME_FORMAT.format("测试老师", rating_model.student_number,
-                                                  rating_model.student_name))
+            TEACHER_SCORE_FILE_NAME_FORMAT.format(guidance_teacher_name,
+                                                  student_number,
+                                                  student_name))
 
     # 因为模板中只有一个表格对象
     table = document.tables[0]
@@ -132,11 +141,52 @@ def generate_word_to_file(rating_model, date_catalog):
                 temp = temp.replace(SCORE_5_KEY, str(rating_model.scores[4]))
             if SCORE_6_KEY in temp:
                 temp = temp.replace(SCORE_6_KEY, str(rating_model.scores[5]))
+            if SCORE_7_KEY in temp:
+                temp = temp.replace(SCORE_7_KEY, str(rating_model.scores[6]))
+            if SCORE_8_KEY in temp:
+                temp = temp.replace(SCORE_8_KEY, str(rating_model.scores[7]))
+            if SCORE_9_KEY in temp:
+                temp = temp.replace(SCORE_9_KEY, str(rating_model.scores[8]))
+            if SCORE_10_KEY in temp:
+                temp = temp.replace(SCORE_10_KEY, str(rating_model.scores[9]))
             if TOTAL_SCORE_KEY in temp:
                 temp = temp.replace(TOTAL_SCORE_KEY, str(rating_model.total_score))
             cell_value.text = temp
     # 储存新文件
     document.save(output_file_path)
+
+
+def handle_output_model(output_model, date_catalog):
+    """
+    处理 输出实体模型
+    @param output_model: 输出实体模型 - 抽象为一个学生的不同评分记录
+    @param date_catalog: 日期时间 子目录
+    @return:
+    """
+    # 根据 评阅评分记录表 生成word文件
+    generate_word_by_rating_sheet(
+        output_model.student_number,
+        output_model.student_name,
+        output_model.guidance_teacher_name,
+        output_model.comment_score_model,
+        date_catalog
+    )
+    # 根据 指导老师评分记录 生成word文件
+    generate_word_by_rating_sheet(
+        output_model.student_number,
+        output_model.student_name,
+        output_model.guidance_teacher_name,
+        output_model.teacher_score_model,
+        date_catalog
+    )
+    # 根据 答辩评分记录 生成word文件
+    generate_word_by_rating_sheet(
+        output_model.student_number,
+        output_model.student_name,
+        output_model.guidance_teacher_name,
+        output_model.debate_score_model,
+        date_catalog
+    )
 
 
 def test():

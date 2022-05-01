@@ -6,9 +6,8 @@
 @Author :    Jason
 @Date :      2022/4/28 15:54
 @Description  Python version-3.10
-
+TODO: 在CommonTools下创建不同类型的判空方法并使用
 """
-
 
 
 class BaseRatingModel(object):
@@ -103,6 +102,19 @@ class BaseRatingModel(object):
     def __repr__(self) -> str:
         return self.__str__()
 
+    def __eq__(self, o: object) -> bool:
+        """
+        重写，以便 == 比较时用
+        """
+        return str(self.__student_number) == str(o.student_number)
+
+    def __hash__(self) -> int:
+        """
+        重写，以便 set 集合用
+        判断 是否同一人
+        """
+        return hash(str(self.__student_number))
+
 
 class CommentScoreModel(BaseRatingModel):
     """评阅评分记录类"""
@@ -144,6 +156,8 @@ class CommentScoreModel(BaseRatingModel):
 class DebateScoreModel(BaseRatingModel):
     """答辩评分记录类"""
     __slots__ = (
+        # 答辩内容/答辩评语 - 字符串
+        "__debate_content",
         # 答辩组长
         "__debate_group_leader_name",
         # 答辩组秘书 - 字符串
@@ -154,9 +168,18 @@ class DebateScoreModel(BaseRatingModel):
 
     def __init__(self):
         super(DebateScoreModel, self).__init__()
+        self.__debate_content = ''
         self.__debate_group_leader_name = ''
         self.__debate_group_secretary_name = ''
         self.__debate_group_member = ''
+
+    @property
+    def debate_content(self):
+        return self.__debate_content
+
+    @debate_content.setter
+    def debate_content(self, x):
+        self.__debate_content = '' if x is None else str(x)
 
     @property
     def debate_group_leader_name(self):
@@ -183,7 +206,7 @@ class DebateScoreModel(BaseRatingModel):
         self.__debate_group_member = '' if x is None else str(x)
 
     def __str__(self) -> str:
-        return super().__str__() + f"debate_group_leader_name: {self.__debate_group_leader_name} debate_group_secretary_name:{self.__debate_group_secretary_name} debate_group_member:{self.__debate_group_member}";
+        return super().__str__() + f"debate_group_content: {self.__debate_content} debate_group_leader_name: {self.__debate_group_leader_name} debate_group_secretary_name:{self.__debate_group_secretary_name} debate_group_member:{self.__debate_group_member}";
 
     def __repr__(self) -> str:
         return self.__str__()
@@ -226,38 +249,97 @@ class TeacherScoreModel(BaseRatingModel):
         return self.__str__()
 
 
+class OutputModel(object):
+    """输出实体模型 - 抽象为一个学生的不同评分记录"""
+    __slots__ = (
+        # 学号 - 字符串
+        "__student_number",
+        # 姓名
+        "__student_name",
+        # 指导老师姓名
+        "__guidance_teacher_name",
+        # 评阅评分记录
+        "__comment_score_model",
+        # 指导老师评分记录
+        "__teacher_score_model",
+        # 答辩评分记录
+        "__debate_score_model"
+    )
+
+    def __init__(self):
+        self.__student_number = ''
+        self.__student_name = ''
+        self.__guidance_teacher_name = ''
+        self.__comment_score_model = None
+        self.__teacher_score_model = None
+        self.__debate_score_model = None
+
+    @property
+    def student_number(self):
+        return self.__student_number
+
+    @student_number.setter
+    def student_number(self, x):
+        self.__student_number = '' if x is None else str(x)
+
+    @property
+    def student_name(self):
+        return self.__student_name
+
+    @student_name.setter
+    def student_name(self, x):
+        self.__student_name = '' if x is None else str(x)
+
+    @property
+    def guidance_teacher_name(self):
+        return self.__guidance_teacher_name
+
+    @guidance_teacher_name.setter
+    def guidance_teacher_name(self, x):
+        self.__guidance_teacher_name = '' if x is None else str(x)
+
+    @property
+    def comment_score_model(self):
+        return self.__comment_score_model
+
+    @comment_score_model.setter
+    def comment_score_model(self, x):
+        self.__comment_score_model = x
+
+    @property
+    def teacher_score_model(self):
+        return self.__teacher_score_model
+
+    @teacher_score_model.setter
+    def teacher_score_model(self, x):
+        self.__teacher_score_model = x
+
+    @property
+    def debate_score_model(self):
+        return self.__debate_score_model
+
+    @debate_score_model.setter
+    def debate_score_model(self, x):
+        self.__debate_score_model = x
+
+    def __str__(self) -> str:
+        return f"student_number: {self.__student_number} " \
+               f"student_name: {self.__student_name} " \
+               f"guidance_teacher_name: {self.__guidance_teacher_name} \n"\
+               f"teacher_score_model: {self.__teacher_score_model} \n"\
+               f"comment_score_model: {self.__comment_score_model} \n"\
+               f"debate_score_model: {self.__debate_score_model}"
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+
 def test():
     """
     测试方法
     @return: None
     """
-    params = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', '001']
-    params_2 = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', '001']
-    params_3 = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', 'FeiFei', 'Auro,Jack,HuJian']
-    a = CommentScoreModel()
-    print(isinstance(a, CommentScoreModel))
-    a.id = params[0]
-    a.student_number = params[1]
-    a.student_name = params[2]
-    a.major = params[3]
-    a.thesis_topic = params[4]
-    a.scores = params[5]
-    a.review_teacher_name = params[6]
-    a.review_teacher_work_number = params[7]
-
-
-    # b = DebateScoreModel()
-    # b.id = params_3[0]
-    # b.student_number = params_3[1]
-    # b.student_name = params_3[2]
-    # b.major = params_3[3]
-    # b.thesis_topic = params_3[4]
-    # b.scores = params_3[5]
-    # b.debate_group_leader_name = params_3[6]
-    # b.debate_group_secretary_name = params_3[7]
-    # b.debate_group_member = params_3[8]
-    #
-    # print(b)
+    pass
 
 
 if __name__ == "__main__":
