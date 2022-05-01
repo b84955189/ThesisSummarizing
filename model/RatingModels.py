@@ -156,7 +156,7 @@ class CommentScoreModel(BaseRatingModel):
 class DebateScoreModel(BaseRatingModel):
     """答辩评分记录类"""
     __slots__ = (
-        # 答辩内容 - 字符串
+        # 答辩内容/答辩评语 - 字符串
         "__debate_content",
         # 答辩组长
         "__debate_group_leader_name",

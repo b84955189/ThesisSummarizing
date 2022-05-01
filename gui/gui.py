@@ -18,10 +18,10 @@ import tkinter.filedialog
 import tkinter as tk
 import threading
 
-from func.ExcelFunc import get_workbook, get_comment_scores_data, get_teacher_scores_data, get_debate_scores_data, \
-    close_workbook, reorganization_data
+from func import ExcelFunc
 from func.WordFunc import handle_output_model
 from model.Config import Configs
+from model.EnumModel import SheetType
 
 OFFSET_X = 150
 OFFSET_Y = 5
@@ -86,11 +86,16 @@ def my_task(excel_path):
         # 按 日期时间 生成子目录
         date_catalog = OUTPUT_PATH / Path(f'./{datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d-%H%M%S")}')
         # 获取工作簿
-        wb = get_workbook(excel_path)
+        wb = ExcelFunc.get_workbook(excel_path)
+        comment_scores_sheet = wb[ExcelFunc.COMMENT_SCORE_SHEET_NAME]
+        debate_scores_sheet = wb[ExcelFunc.DEBATE_SCORE_SHEET_NAME]
+        teacher_scores_sheet = wb[ExcelFunc.TEACHER_SCORE_SHEET_NAME]
         # 生成Word
-        for output_model in reorganization_data(get_debate_scores_data(wb),
-                                                get_comment_scores_data(wb),
-                                                get_teacher_scores_data(wb)):
+        for output_model in ExcelFunc.reorganization_data(
+                ExcelFunc.get_data_from_sheet(comment_scores_sheet, SheetType.COMMENT_SCORES_SHEET),
+                ExcelFunc.get_data_from_sheet(debate_scores_sheet, SheetType.DEBATE_SCORES_SHEET),
+                ExcelFunc.get_data_from_sheet(teacher_scores_sheet, SheetType.TEACHER_SCORES_SHEET),
+                                                ):
             handle_output_model(output_model, date_catalog)
 
         # ---------------
@@ -110,7 +115,7 @@ def my_task(excel_path):
         window.after(0, append_tips, config.default_welcome_tips)
     finally:
         # 关闭数据信息工作簿
-        close_workbook(wb)
+        ExcelFunc.close_workbook(wb)
 
 
 def select_path():

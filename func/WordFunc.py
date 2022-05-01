@@ -26,12 +26,17 @@ STU_NUMBER_KEY = "{{学号}}"
 NAME_KEY = "{{姓名}}"
 TOPIC_KEY = "{{题目}}"
 
+# TODO: 调整分数填充方式 - 动态识别
 SCORE_1_KEY = "{{分数1}}"
 SCORE_2_KEY = "{{分数2}}"
 SCORE_3_KEY = "{{分数3}}"
 SCORE_4_KEY = "{{分数4}}"
 SCORE_5_KEY = "{{分数5}}"
 SCORE_6_KEY = "{{分数6}}"
+SCORE_7_KEY = "{{分数7}}"
+SCORE_8_KEY = "{{分数8}}"
+SCORE_9_KEY = "{{分数9}}"
+SCORE_10_KEY = "{{分数10}}"
 
 TOTAL_SCORE_KEY = "{{总分}}"
 YEAR_KEY = "{{年}}"
@@ -136,6 +141,14 @@ def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher
                 temp = temp.replace(SCORE_5_KEY, str(rating_model.scores[4]))
             if SCORE_6_KEY in temp:
                 temp = temp.replace(SCORE_6_KEY, str(rating_model.scores[5]))
+            if SCORE_7_KEY in temp:
+                temp = temp.replace(SCORE_7_KEY, str(rating_model.scores[6]))
+            if SCORE_8_KEY in temp:
+                temp = temp.replace(SCORE_8_KEY, str(rating_model.scores[7]))
+            if SCORE_9_KEY in temp:
+                temp = temp.replace(SCORE_9_KEY, str(rating_model.scores[8]))
+            if SCORE_10_KEY in temp:
+                temp = temp.replace(SCORE_10_KEY, str(rating_model.scores[9]))
             if TOTAL_SCORE_KEY in temp:
                 temp = temp.replace(TOTAL_SCORE_KEY, str(rating_model.total_score))
             cell_value.text = temp
