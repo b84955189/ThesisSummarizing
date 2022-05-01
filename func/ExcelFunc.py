@@ -12,8 +12,7 @@ TODO: 重构冗余代码
 from openpyxl import load_workbook
 
 from func import CommonTools
-from model.RatingModels import CommentScoreModel, DebateScoreModel, TeacherScoreModel
-
+from model.RatingModels import CommentScoreModel, DebateScoreModel, TeacherScoreModel, OutputModel
 
 # Excel 表名称
 COMMENT_SCORE_SHEET_NAME = "评阅老师成绩"
@@ -39,9 +38,9 @@ def get_comment_scores_data(workbook):
     """
     读 评阅老师成绩 记录
     @param workbook: Excel工作簿对象
-    @return: 评阅老师成绩 记录 - set
+    @return: 评阅老师成绩 记录 - dict
     """
-    comment_scores = set()
+    comment_scores = {}
     comment_scores_sheet = workbook[COMMENT_SCORE_SHEET_NAME]
     # 跳过评阅老师成绩表 表头
     for row in range(3, comment_scores_sheet.max_row + 1):
@@ -77,7 +76,11 @@ def get_comment_scores_data(workbook):
         comment_score.scores = scores
         comment_score.review_teacher_name = comment_scores_sheet.cell(row, 13).value
         comment_score.review_teacher_work_number = comment_scores_sheet.cell(row, 14).value
-        comment_scores.add(comment_score)
+        if comment_score.student_number not in comment_scores:
+            comment_scores[comment_score.student_number] = comment_score
+        else:
+            # TODO: 记录重复 - 记录错误记录
+            pass
 
     return comment_scores
 
@@ -86,9 +89,9 @@ def get_debate_scores_data(workbook):
     """
     读 答辩成绩 记录
     @param workbook: Excel工作簿对象
-    @return: 答辩成绩 记录 - set
+    @return: 答辩成绩 记录 - dict
     """
-    debate_scores = set()
+    debate_scores = {}
     debate_scores_sheet = workbook[DEBATE_SCORE_SHEET_NAME]
 
     # 跳过评阅老师成绩表 表头
@@ -125,9 +128,12 @@ def get_debate_scores_data(workbook):
         debate_score.debate_group_leader_name = debate_scores_sheet.cell(row, 13).value
         debate_score.debate_group_secretary_name = debate_scores_sheet.cell(row, 14).value
         debate_score.debate_group_member = debate_scores_sheet.cell(row, 15).value
-        # 测试
-        # print(debate_score)
-        debate_scores.add(debate_score)
+
+        if debate_score.student_number not in debate_scores:
+            debate_scores[debate_score.student_number] = debate_score
+        else:
+            # TODO: 记录重复 - 记录错误记录
+            pass
 
     return debate_scores
 
@@ -136,9 +142,10 @@ def get_teacher_scores_data(workbook):
     """
     读 指导老师成绩 记录
     @param workbook: Excel工作簿对象
-    @return: 指导老师成绩 记录 - set
+    @return: 指导老师成绩 记录 - dict
     """
-    teacher_scores = set()
+    # set 去重
+    teacher_scores = {}
     teacher_scores_sheet = workbook[TEACHER_SCORE_SHEET_NAME]
 
     # 跳过评阅老师成绩表 表头
@@ -175,11 +182,40 @@ def get_teacher_scores_data(workbook):
         teacher_score.scores = scores
         teacher_score.guidance_teacher_name = teacher_scores_sheet.cell(row, 13).value
         teacher_score.guidance_teacher_work_number = teacher_scores_sheet.cell(row, 14).value
-        # 测试
-        # print(teacher_score)
-        teacher_scores.add(teacher_score)
+
+        if teacher_score.student_number not in teacher_scores:
+            teacher_scores[teacher_score.student_number] = teacher_score
+        else:
+            # TODO: 记录重复 - 记录错误记录
+            pass
 
     return teacher_scores
+
+
+def reorganization_data(debate_scores, comment_scores, teacher_scores):
+    """
+    重组数据 - 一个学生 对应 三个评分表
+    循环 依据表 - 指导老师评分表
+    @param debate_scores:
+    @param comment_scores:
+    @param teacher_scores:
+    @return:
+    """
+    output_models = []
+    for k, v in teacher_scores.items():
+        # print(k, v)
+        output_model = OutputModel()
+        # 基本信息
+        output_model.student_number = v.student_number
+        output_model.student_name = v.student_name
+        output_model.guidance_teacher_name = v.guidance_teacher_name
+        # 评分
+        output_model.teacher_score_model = v
+        output_model.comment_score_model = comment_scores[v.student_number]
+        output_model.debate_score_model = debate_scores[v.student_number]
+
+        output_models.append(output_model)
+    return output_models
 
 
 def test():
@@ -188,10 +224,19 @@ def test():
     @return: None
     """
     wb = get_workbook("D:\\Projects\\Python\\ThesisSummarizing\\template\\rating-information.xlsx")
-    for temp in get_debate_scores_data(wb):
+    # for k, v in get_debate_scores_data(wb).items():
+    #     print(k, v)
+    # for k, v in get_comment_scores_data(wb).items():
+    #     print(k, v)
+
+
+
+    # for k, v in get_teacher_scores_data(wb).items():
+    #     print(k, v)
+    # for k in get_debate_scores_data(wb).keys():
+    #     print(k)
+    for temp in reorganization_data(get_debate_scores_data(wb), get_comment_scores_data(wb), get_teacher_scores_data(wb)):
         print(temp)
-    get_teacher_scores_data(wb)
-    get_debate_scores_data(wb)
     close_workbook(wb)
 
 

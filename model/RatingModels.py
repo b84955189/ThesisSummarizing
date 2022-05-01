@@ -6,7 +6,7 @@
 @Author :    Jason
 @Date :      2022/4/28 15:54
 @Description  Python version-3.10
-
+TODO: 在CommonTools下创建不同类型的判空方法并使用
 """
 
 
@@ -244,6 +244,91 @@ class TeacherScoreModel(BaseRatingModel):
 
     def __str__(self) -> str:
         return super().__str__() + f"guidance_teacher_name: {self.__guidance_teacher_name} guidance_teacher_work_number:{self.__guidance_teacher_work_number}";
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+
+class OutputModel(object):
+    """输出实体模型 - 抽象为一个学生的不同评分记录"""
+    __slots__ = (
+        # 学号 - 字符串
+        "__student_number",
+        # 姓名
+        "__student_name",
+        # 指导老师姓名
+        "__guidance_teacher_name",
+        # 评阅评分记录
+        "__comment_score_model",
+        # 指导老师评分记录
+        "__teacher_score_model",
+        # 答辩评分记录
+        "__debate_score_model"
+    )
+
+    def __init__(self):
+        self.__student_number = ''
+        self.__student_name = ''
+        self.__guidance_teacher_name = ''
+        self.__comment_score_model = None
+        self.__teacher_score_model = None
+        self.__debate_score_model = None
+
+    @property
+    def student_number(self):
+        return self.__student_number
+
+    @student_number.setter
+    def student_number(self, x):
+        self.__student_number = '' if x is None else str(x)
+
+    @property
+    def student_name(self):
+        return self.__student_name
+
+    @student_name.setter
+    def student_name(self, x):
+        self.__student_name = '' if x is None else str(x)
+
+    @property
+    def guidance_teacher_name(self):
+        return self.__guidance_teacher_name
+
+    @guidance_teacher_name.setter
+    def guidance_teacher_name(self, x):
+        self.__guidance_teacher_name = '' if x is None else str(x)
+
+    @property
+    def comment_score_model(self):
+        return self.__comment_score_model
+
+    @comment_score_model.setter
+    def comment_score_model(self, x):
+        self.__comment_score_model = x
+
+    @property
+    def teacher_score_model(self):
+        return self.__teacher_score_model
+
+    @teacher_score_model.setter
+    def teacher_score_model(self, x):
+        self.__teacher_score_model = x
+
+    @property
+    def debate_score_model(self):
+        return self.__debate_score_model
+
+    @debate_score_model.setter
+    def debate_score_model(self, x):
+        self.__debate_score_model = x
+
+    def __str__(self) -> str:
+        return f"student_number: {self.__student_number} " \
+               f"student_name: {self.__student_name} " \
+               f"guidance_teacher_name: {self.__guidance_teacher_name} \n"\
+               f"teacher_score_model: {self.__teacher_score_model} \n"\
+               f"comment_score_model: {self.__comment_score_model} \n"\
+               f"debate_score_model: {self.__debate_score_model}"
 
     def __repr__(self) -> str:
         return self.__str__()

@@ -19,8 +19,8 @@ import tkinter as tk
 import threading
 
 from func.ExcelFunc import get_workbook, get_comment_scores_data, get_teacher_scores_data, get_debate_scores_data, \
-    close_workbook
-from func.WordFunc import generate_word_to_file
+    close_workbook, reorganization_data
+from func.WordFunc import handle_output_model
 from model.Config import Configs
 
 OFFSET_X = 150
@@ -34,6 +34,7 @@ file_path = ""
 entry_1 = ""
 my_task_thread = ""
 config = Configs()
+
 
 # Default state
 # stop_excel_task_thread_sign = False
@@ -87,12 +88,10 @@ def my_task(excel_path):
         # 获取工作簿
         wb = get_workbook(excel_path)
         # 生成Word
-        for model in get_comment_scores_data(wb):
-            generate_word_to_file(model, date_catalog)
-        for model in get_teacher_scores_data(wb):
-            generate_word_to_file(model, date_catalog)
-        for model in get_debate_scores_data(wb):
-            generate_word_to_file(model, date_catalog)
+        for output_model in reorganization_data(get_debate_scores_data(wb),
+                                                get_comment_scores_data(wb),
+                                                get_teacher_scores_data(wb)):
+            handle_output_model(output_model, date_catalog)
 
         # ---------------
         window.after(0, clear_tips)
