@@ -21,27 +21,28 @@ DEBATE_SCORE_FILE_PATH = TEMPLATE_PATH / Path("./debate-score.docx")
 TEACHER_SCORE_FILE_PATH = TEMPLATE_PATH / Path("./teacher-score.docx")
 
 # 替换关键字
-MAJOR_KEY = "{{专业}}"
-STU_NUMBER_KEY = "{{学号}}"
-NAME_KEY = "{{姓名}}"
-TOPIC_KEY = "{{题目}}"
+KEY_MAJOR = "{{MAJOR}}"
+KEY_STU_NUMBER = "{{SNUM}}"
+KEY_STU_NAME = "{{SNAME}}"
+KEY_TOPIC = "{{TOPIC}}"
 
 # TODO: 调整分数填充方式 - 动态识别
-SCORE_1_KEY = "{{分数1}}"
-SCORE_2_KEY = "{{分数2}}"
-SCORE_3_KEY = "{{分数3}}"
-SCORE_4_KEY = "{{分数4}}"
-SCORE_5_KEY = "{{分数5}}"
-SCORE_6_KEY = "{{分数6}}"
-SCORE_7_KEY = "{{分数7}}"
-SCORE_8_KEY = "{{分数8}}"
-SCORE_9_KEY = "{{分数9}}"
-SCORE_10_KEY = "{{分数10}}"
+KEY_SCORE_1 = "{{SC1}}"
+KEY_SCORE_2 = "{{SC2}}"
+KEY_SCORE_3 = "{{SC3}}"
+KEY_SCORE_4 = "{{SC4}}"
+KEY_SCORE_5 = "{{SC5}}"
+KEY_SCORE_6 = "{{SC6}}"
+KEY_SCORE_7 = "{{SC7}}"
+KEY_SCORE_8 = "{{SC8}}"
+KEY_SCORE_9 = "{{SC9}}"
+KEY_SCORE_10 = "{{SC10}}"
 
-TOTAL_SCORE_KEY = "{{总分}}"
-YEAR_KEY = "{{年}}"
-MONTH_KEY = "{{月}}"
-DAY_KEY = "{{日}}"
+
+KEY_TOTAL_SCORE = "{{TSC}}"
+KEY_YEAR = "{{Y}}"
+KEY_MONTH = "{{M}}"
+KEY_DAY = "{{D}}"
 
 # 年月日 - 默认当前时间
 DEFAULT_YEAR = f"{datetime.datetime.now().year}"
@@ -100,58 +101,49 @@ def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher
 
     # 因为模板中只有一个表格对象
     table = document.tables[0]
-    # TODO: 一致字体格式
     # 遍历段落
     for paragraph in document.paragraphs:
-        # 测试
-        # print(paragraph.style.name, paragraph.text)
-        temp = paragraph.text
-        # 关键字替换
-        if MAJOR_KEY in temp:
-            temp = temp.replace(MAJOR_KEY, rating_model.major)
-        if STU_NUMBER_KEY in temp:
-            temp = temp.replace(STU_NUMBER_KEY, rating_model.student_number)
-        if NAME_KEY in temp:
-            temp = temp.replace(NAME_KEY, rating_model.student_name)
-        if TOPIC_KEY in temp:
-            temp = temp.replace(TOPIC_KEY, rating_model.thesis_topic)
-        if YEAR_KEY in temp:
-            temp = temp.replace(YEAR_KEY, DEFAULT_YEAR)
-        if MONTH_KEY in temp:
-            temp = temp.replace(MONTH_KEY, DEFAULT_MONTH)
-        if DAY_KEY in temp:
-            temp = temp.replace(DAY_KEY, DEFAULT_DAY)
-        paragraph.text = temp
+        # 遍历run块
+        for run in paragraph.runs:
+            run.text = run.text.replace(KEY_MAJOR, rating_model.major)
+            run.text = run.text.replace(KEY_STU_NUMBER, rating_model.student_number)
+            run.text = run.text.replace(KEY_STU_NAME, rating_model.student_name)
+            run.text = run.text.replace(KEY_TOPIC, rating_model.thesis_topic)
+
+            run.text = run.text.replace(KEY_YEAR, DEFAULT_YEAR)
+            run.text = run.text.replace(KEY_MONTH, DEFAULT_MONTH)
+            run.text = run.text.replace(KEY_DAY, DEFAULT_DAY)
     # 遍历表格
     # 遍历 表格-行
     for row in range(len(table.rows)):
         # 遍历 表格-行的每列值
         for cell_value in table.rows[row].cells:
-            temp = cell_value.text
-            # 关键字替换 - 这里由于评分记录实体对象不同 关键字也不同，所以无需担心该表没有该关键字却被赋值问题
-            if SCORE_1_KEY in temp:
-                temp = temp.replace(SCORE_1_KEY, str(rating_model.scores[0]))
-            if SCORE_2_KEY in temp:
-                temp = temp.replace(SCORE_2_KEY, str(rating_model.scores[1]))
-            if SCORE_3_KEY in temp:
-                temp = temp.replace(SCORE_3_KEY, str(rating_model.scores[2]))
-            if SCORE_4_KEY in temp:
-                temp = temp.replace(SCORE_4_KEY, str(rating_model.scores[3]))
-            if SCORE_5_KEY in temp:
-                temp = temp.replace(SCORE_5_KEY, str(rating_model.scores[4]))
-            if SCORE_6_KEY in temp:
-                temp = temp.replace(SCORE_6_KEY, str(rating_model.scores[5]))
-            if SCORE_7_KEY in temp:
-                temp = temp.replace(SCORE_7_KEY, str(rating_model.scores[6]))
-            if SCORE_8_KEY in temp:
-                temp = temp.replace(SCORE_8_KEY, str(rating_model.scores[7]))
-            if SCORE_9_KEY in temp:
-                temp = temp.replace(SCORE_9_KEY, str(rating_model.scores[8]))
-            if SCORE_10_KEY in temp:
-                temp = temp.replace(SCORE_10_KEY, str(rating_model.scores[9]))
-            if TOTAL_SCORE_KEY in temp:
-                temp = temp.replace(TOTAL_SCORE_KEY, str(rating_model.total_score))
-            cell_value.text = temp
+            # 遍历 段
+            for paragraph in cell_value.paragraphs:
+                # 遍历 run 块
+                for run in paragraph.runs:
+                    if KEY_SCORE_1 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_1, str(rating_model.scores[0]))
+                    if KEY_SCORE_2 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_2, str(rating_model.scores[1]))
+                    if KEY_SCORE_3 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_3, str(rating_model.scores[2]))
+                    if KEY_SCORE_4 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_4, str(rating_model.scores[3]))
+                    if KEY_SCORE_5 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_5, str(rating_model.scores[4]))
+                    if KEY_SCORE_6 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_6, str(rating_model.scores[5]))
+                    if KEY_SCORE_7 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_7, str(rating_model.scores[6]))
+                    if KEY_SCORE_8 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_8, str(rating_model.scores[7]))
+                    if KEY_SCORE_9 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_9, str(rating_model.scores[8]))
+                    if KEY_SCORE_10 in run.text:
+                        run.text = run.text.replace(KEY_SCORE_10, str(rating_model.scores[9]))
+
+                    run.text = run.text.replace(KEY_TOTAL_SCORE, str(rating_model.total_score))
     # 储存新文件
     document.save(output_file_path)
 
@@ -194,57 +186,32 @@ def test():
     测试方法
     @return: None
     """
-    # template_path = Path(__file__).parent.parent / Path("./template")
-    # file_path = template_path / Path("./comment-score.docx")
-    # print(template_path)
-    # document = Document(file_path)
+    template_path = Path(__file__).parent.parent / Path("./template")
+    file_path = template_path / Path("./debate-score.docx")
+    print(template_path)
+    document = Document(file_path)
     # 因为模板中只有一个表格对象
-    # table = document.tables[0]
+    table = document.tables[0]
     # 遍历段落
-    # for paragraph in document.paragraphs:
-    #     print(paragraph.style.name, paragraph.text)
-    #     temp = paragraph.text
-    #     # 关键字替换
-    #     if "{{专业}}" in temp:
-    #         temp = temp.replace("{{专业}}", "计算机")
-    #     if "{{学号}}" in temp:
-    #         temp = temp.replace("{{学号}}", "202109070129")
-    #     if "{{姓名}}" in temp:
-    #         temp = temp.replace("{{姓名}}", "刘龙龙")
-    #     if "{{题目}}" in temp:
-    #         temp = temp.replace("{{题目}}", "Python自动化")
-    #     if "{{年}}" in temp:
-    #         temp = temp.replace("{{年}}", "2021")
-    #     if "{{月}}" in temp:
-    #         temp = temp.replace("{{月}}", "04")
-    #     if "{{日}}" in temp:
-    #         temp = temp.replace("{{日}}", "28")
-    #     paragraph.text = temp
-    # 遍历表格
-    # 遍历 表格-行
-    # for row in range(len(table.rows)):
-    #     # 遍历 表格-行的每列值
-    #     for cell_value in table.rows[row].cells:
-    #         # print(cell_value.text)
-    #         temp = cell_value.text
-    #         # 关键字替换
-    #         if "{{分数1}}" in temp:
-    #             temp = temp.replace("{{分数1}}", "10")
-    #         if "{{分数2}}" in temp:
-    #             temp = temp.replace("{{分数2}}", "20")
-    #         if "{{分数3}}" in temp:
-    #             temp = temp.replace("{{分数3}}", "30")
-    #         if "{{分数4}}" in temp:
-    #             temp = temp.replace("{{分数4}}", "40")
-    #         if "{{分数5}}" in temp:
-    #             temp = temp.replace("{{分数5}}", "50")
-    #         if "{{分数6}}" in temp:
-    #             temp = temp.replace("{{分数6}}", "60")
-    #         if "{{总分}}" in temp:
-    #             temp = temp.replace("{{总分}}", "210")
-    #         cell_value.text = temp
+    for paragraph in document.paragraphs:
+        for run in paragraph.runs:
+            # if MAJOR_KEY in run.text:
+            #     print(run)
+            print(run.text)
+            # run.text = run.text.replace(KEY_MAJOR, "计算机科学与技术")
+            # run.text = run.text.replace(KEY_STU_NAME, "刘龙龙")
+    for row in range(len(table.rows)):
+        # 遍历 表格-行的每列值
+        for cell_value in table.rows[row].cells:
+            for paragraph in cell_value.paragraphs:
+                for run in paragraph.runs:
+                    # if MAJOR_KEY in run.text:
+                    #     print(run)
+                    print(run.text)
+
+
     # 储存新文件
-    # document.save(template_path / Path("./new.docx"))
+    document.save(template_path / Path("./new.docx"))
     # 测试创建目录
     # parents：如果父目录不存在，是否创建父目录。
     # exist_ok：只有在目录不存在时创建目录，目录已存在时不会抛出异常。
@@ -252,36 +219,8 @@ def test():
     #     parents=True, exist_ok=True)
     # generate_word_to_file()
 
-    params = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', '001']
-    params_2 = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', '001']
-    params_3 = [1, '201809090001', '张三', '计科', '微信小程序的打法水电费打法的设计', [20, 30, 20, 8, 7, 6], 'Jason', 'FeiFei',
-                'Auro,Jack,HuJian']
-    a = CommentScoreModel()
-    print(isinstance(a, CommentScoreModel))
-    a.id = params[0]
-    a.student_number = params[1]
-    a.student_name = params[2]
-    a.major = params[3]
-    a.thesis_topic = params[4]
-    a.scores = params[5]
-    a.review_teacher_name = params[6]
-    a.review_teacher_work_number = params[7]
-
-    generate_word_to_file(a)
-
-    # b = DebateScoreModel()
-    # b.id = params_3[0]
-    # b.student_number = params_3[1]
-    # b.student_name = params_3[2]
-    # b.major = params_3[3]
-    # b.thesis_topic = params_3[4]
-    # b.scores = params_3[5]
-    # b.debate_group_leader_name = params_3[6]
-    # b.debate_group_secretary_name = params_3[7]
-    # b.debate_group_member = params_3[8]
-    #
-    # print(b)
-
 
 if __name__ == "__main__":
     test()
+
+
