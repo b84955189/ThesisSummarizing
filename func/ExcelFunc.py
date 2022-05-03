@@ -41,7 +41,7 @@ def close_workbook(workbook):
 
 def get_data_from_sheet(sheet, sheet_type):
     """
-    读 评阅老师成绩 记录
+    读 成绩 记录
     @param sheet: 表对象
     @param sheet_type: 表类型 - 枚举
     @return: 表数据 - dict
@@ -144,8 +144,8 @@ def test():
     wb = get_workbook("D:\\Projects\\Python\\ThesisSummarizing\\template\\rating-information.xlsx")
     # for k, v in get_debate_scores_data(wb).items():
     #     print(k, v)
-    # for k, v in get_comment_scores_data(wb).items():
-    #     print(k, v)
+    for k, v in get_data_from_sheet(wb[COMMENT_SCORE_SHEET_NAME], SheetType.COMMENT_SCORES_SHEET).items():
+        print(k, v)
 
     # for k, v in get_teacher_scores_data(wb).items():
     #     print(k, v)
@@ -154,8 +154,8 @@ def test():
     # for temp in reorganization_data(get_debate_scores_data(wb), get_comment_scores_data(wb),
     #                                 get_teacher_scores_data(wb)):
     #     print(temp)
-    for k, v in get_data_from_sheet1(wb[TEACHER_SCORE_SHEET_NAME], SheetType.TEACHER_SCORES_SHEET).items():
-        print(k, v)
+    # for k, v in get_data_from_sheet(wb[TEACHER_SCORE_SHEET_NAME], SheetType.TEACHER_SCORES_SHEET).items():
+    #     print(k, v)
     close_workbook(wb)
 
 

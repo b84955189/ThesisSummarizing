@@ -250,7 +250,7 @@ class TeacherScoreModel(BaseRatingModel):
 
 
 class OutputModel(object):
-    """输出实体模型 - 抽象为一个学生的不同评分记录"""
+    """输出实体模型 - 抽象为一个学生的不同评分记录，并附加输出参数"""
     __slots__ = (
         # 学号 - 字符串
         "__student_number",
@@ -263,7 +263,22 @@ class OutputModel(object):
         # 指导老师评分记录
         "__teacher_score_model",
         # 答辩评分记录
-        "__debate_score_model"
+        "__debate_score_model",
+        # 输出参数
+        # # 评阅成绩Word模板 路径 - 字符串
+        "__comment_word_path",
+        # # 答辩成绩Word模板 路径 - 字符串
+        "__debate_word_path",
+        # # 指导老师成绩Word模板 路径 - 字符串
+        "__teacher_word_path",
+        # # 输出目录 路径 - 字符串
+        "__output_directory_path",
+        # # Word模板 日期关键字 - 年
+        "__template_key_year",
+        # # Word模板 日期关键字 - 月
+        "__template_key_month",
+        # # Word模板 日期关键字 - 日
+        "__template_key_day"
     )
 
     def __init__(self):
@@ -273,6 +288,14 @@ class OutputModel(object):
         self.__comment_score_model = None
         self.__teacher_score_model = None
         self.__debate_score_model = None
+
+        self.__comment_word_path = ''
+        self.__debate_word_path = ''
+        self.__teacher_word_path = ''
+        self.__output_directory_path = ''
+        self.__template_key_year = ''
+        self.__template_key_month = ''
+        self.__template_key_day = ''
 
     @property
     def student_number(self):
@@ -322,13 +345,76 @@ class OutputModel(object):
     def debate_score_model(self, x):
         self.__debate_score_model = x
 
+    @property
+    def comment_word_path(self):
+        return self.__comment_word_path
+
+    @comment_word_path.setter
+    def comment_word_path(self, x):
+        self.__comment_word_path = x
+
+    @property
+    def debate_word_path(self):
+        return self.__debate_word_path
+
+    @debate_word_path.setter
+    def debate_word_path(self, x):
+        self.__debate_word_path = x
+
+    @property
+    def teacher_word_path(self):
+        return self.__teacher_word_path
+
+    @teacher_word_path.setter
+    def teacher_word_path(self, x):
+        self.__teacher_word_path = x
+
+    @property
+    def output_directory_path(self):
+        return self.__output_directory_path
+
+    @output_directory_path.setter
+    def output_directory_path(self, x):
+        self.__output_directory_path = x
+
+    @property
+    def template_key_year(self):
+        return self.__template_key_year
+
+    @template_key_year.setter
+    def template_key_year(self, x):
+        self.__template_key_year = x
+
+    @property
+    def template_key_month(self):
+        return self.__template_key_month
+
+    @template_key_month.setter
+    def template_key_month(self, x):
+        self.__template_key_month = x
+
+    @property
+    def template_key_day(self):
+        return self.__template_key_day
+
+    @template_key_day.setter
+    def template_key_day(self, x):
+        self.__template_key_day = x
+
     def __str__(self) -> str:
         return f"student_number: {self.__student_number} " \
                f"student_name: {self.__student_name} " \
-               f"guidance_teacher_name: {self.__guidance_teacher_name} \n"\
-               f"teacher_score_model: {self.__teacher_score_model} \n"\
-               f"comment_score_model: {self.__comment_score_model} \n"\
-               f"debate_score_model: {self.__debate_score_model}"
+               f"guidance_teacher_name: {self.__guidance_teacher_name} \n" \
+               f"teacher_score_model: {self.__teacher_score_model} \n" \
+               f"comment_score_model: {self.__comment_score_model} \n" \
+               f"debate_score_model: {self.__debate_score_model} \n" \
+               f"comment_word_path: {self.__comment_word_path} \n" \
+               f"debate_word_path: {self.__debate_word_path} \n" \
+               f"teacher_word_path: {self.__teacher_word_path} \n" \
+               f"output_directory_path: {self.__output_directory_path} \n" \
+               f"template_key_year: {self.__template_key_year} \n" \
+               f"template_key_month: {self.__template_key_month} \n" \
+               f"template_key_day: {self.__template_key_day} \n"
 
     def __repr__(self) -> str:
         return self.__str__()
