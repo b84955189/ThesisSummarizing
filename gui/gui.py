@@ -64,13 +64,14 @@ month_time_entry = ""
 day_time_entry = ""
 
 
-def change_generate_button_state(sign, tips=None):
+def change_generate_button_state(sign, tips=None, box_type=1):
     """
     改变生成按钮状态
     True - 可用
     False - 不可用
     @param sign: 是否可用标志 - Boolean
     @param tips: 提示语
+    @param box_type: 1 - 信息 2 - 错误  - int
     @return: None
     """
     if sign:
@@ -80,7 +81,11 @@ def change_generate_button_state(sign, tips=None):
         generate_btn.config(image=processing_btn_img)
         generate_btn.config(state="disable")
     if not CommonTools.is_empty_or_none(tips):
-        tk.messagebox.showinfo("Info", f"{tips}")
+        match box_type:
+            case 1:
+                tk.messagebox.showinfo("Info", f"{tips}")
+            case 2:
+                tk.messagebox.showerror("Error", f"{tips}")
 
 
 def my_task(rating_excel_path,
@@ -136,7 +141,7 @@ def my_task(rating_excel_path,
         window.after(0, change_generate_button_state, True, "Generate word file successfully!")
     except Exception as e:
         # 错误提示
-        # window.after()
+        window.after(0, change_generate_button_state, True, "An error occurred, please try again!", 2)
         # dev
         print("错误：", e)
         pass
@@ -149,8 +154,6 @@ def my_task(rating_excel_path,
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-
-# --------------------------------------
 def btn_clicked():
     rating_excel_path = rating_excel_file_path_entry.get().strip()
     comment_word_path = comment_word_file_path_entry.get().strip()
@@ -280,9 +283,6 @@ def select_teacher_word_file_path():
     teacher_word_file_path = tk.filedialog.askopenfilename()
     teacher_word_file_path_entry.delete(0, tk.END)
     teacher_word_file_path_entry.insert(0, teacher_word_file_path)
-
-
-# --------------------------------------
 
 
 # UI thread is single thread !!! If there have a long-time task , everything of
