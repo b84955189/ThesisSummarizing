@@ -7,6 +7,7 @@
 @Date :      2022/4/28 20:49
 @Description  Python version-3.10
 
+TODO: 冗余形参封装
 """
 import datetime
 from pathlib import Path
@@ -58,7 +59,16 @@ TEACHER_SCORE_FILE_NAME_FORMAT = "{}-{}-{}-计科-2022届-毕业设计（论文�
 OUTPUT_PATH = Path(__file__).parent.parent / Path("./out")
 
 
-def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher_name, rating_model, date_catalog):
+def generate_word_by_rating_sheet(student_number,
+                                  student_name,
+                                  guidance_teacher_name,
+                                  rating_model,
+                                  date_catalog,
+                                  template_word_path,
+                                  template_key_year,
+                                  template_key_month,
+                                  template_key_day
+                                  ):
     """
     通过不同评分表生成word文件（docx）
     @param student_number: 学生学号
@@ -66,12 +76,15 @@ def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher
     @param guidance_teacher_name: 指导老师姓名
     @param rating_model: 评分记录实体类
     @param date_catalog: 日期时间 子目录
+    @param template_word_path:  Word模板 路径 - 字符串
+    @param template_key_year: Word模板 关键字 - 年
+    @param template_key_month: Word模板 关键字 - 月
+    @param template_key_day: Word模板 关键字 - 日
     @return: None
     """
     output_file_path = ''
-    document = ''
+    document = Document(template_word_path)
     if isinstance(rating_model, CommentScoreModel):
-        document = Document(COMMENT_SCORE_FILE_PATH)
         # 目录
         # 创建目录
         comment_score_file_catalog_path = date_catalog / Path("./论文评阅评分")
@@ -83,7 +96,6 @@ def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher
                                                   student_number,
                                                   student_name))
     elif isinstance(rating_model, DebateScoreModel):
-        document = Document(DEBATE_SCORE_FILE_PATH)
         debate_score_file_catalog_path = date_catalog / Path("./答辩评分")
         debate_score_file_catalog_path.mkdir(parents=True, exist_ok=True)
         output_file_path = debate_score_file_catalog_path / Path(
@@ -91,7 +103,6 @@ def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher
                                                  student_number,
                                                  student_name))
     elif isinstance(rating_model, TeacherScoreModel):
-        document = Document(TEACHER_SCORE_FILE_PATH)
         teacher_score_file_catalog_path = date_catalog / Path("./指导老师评分")
         teacher_score_file_catalog_path.mkdir(parents=True, exist_ok=True)
         output_file_path = teacher_score_file_catalog_path / Path(
@@ -105,14 +116,18 @@ def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher
     for paragraph in document.paragraphs:
         # 遍历run块
         for run in paragraph.runs:
+            # TODO: 加个判断
             run.text = run.text.replace(KEY_MAJOR, rating_model.major)
             run.text = run.text.replace(KEY_STU_NUMBER, rating_model.student_number)
             run.text = run.text.replace(KEY_STU_NAME, rating_model.student_name)
             run.text = run.text.replace(KEY_TOPIC, rating_model.thesis_topic)
 
-            run.text = run.text.replace(KEY_YEAR, DEFAULT_YEAR)
-            run.text = run.text.replace(KEY_MONTH, DEFAULT_MONTH)
-            run.text = run.text.replace(KEY_DAY, DEFAULT_DAY)
+            # run.text = run.text.replace(KEY_YEAR, DEFAULT_YEAR)
+            # run.text = run.text.replace(KEY_MONTH, DEFAULT_MONTH)
+            # run.text = run.text.replace(KEY_DAY, DEFAULT_DAY)
+            run.text = run.text.replace(KEY_YEAR, f"{template_key_year}")
+            run.text = run.text.replace(KEY_MONTH, f"{template_key_month}")
+            run.text = run.text.replace(KEY_DAY, f"{template_key_day}")
     # 遍历表格
     # 遍历 表格-行
     for row in range(len(table.rows)):
@@ -132,6 +147,7 @@ def generate_word_by_rating_sheet(student_number, student_name, guidance_teacher
                         run.text = run.text.replace(KEY_SCORE_4, str(rating_model.scores[3]))
                     if KEY_SCORE_5 in run.text:
                         run.text = run.text.replace(KEY_SCORE_5, str(rating_model.scores[4]))
+
                     if KEY_SCORE_6 in run.text:
                         run.text = run.text.replace(KEY_SCORE_6, str(rating_model.scores[5]))
                     if KEY_SCORE_7 in run.text:
@@ -161,7 +177,11 @@ def handle_output_model(output_model, date_catalog):
         output_model.student_name,
         output_model.guidance_teacher_name,
         output_model.comment_score_model,
-        date_catalog
+        date_catalog,
+        output_model.comment_word_path,
+        output_model.template_key_year,
+        output_model.template_key_month,
+        output_model.template_key_day
     )
     # 根据 指导老师评分记录 生成word文件
     generate_word_by_rating_sheet(
@@ -169,7 +189,11 @@ def handle_output_model(output_model, date_catalog):
         output_model.student_name,
         output_model.guidance_teacher_name,
         output_model.teacher_score_model,
-        date_catalog
+        date_catalog,
+        output_model.teacher_word_path,
+        output_model.template_key_year,
+        output_model.template_key_month,
+        output_model.template_key_day
     )
     # 根据 答辩评分记录 生成word文件
     generate_word_by_rating_sheet(
@@ -177,7 +201,11 @@ def handle_output_model(output_model, date_catalog):
         output_model.student_name,
         output_model.guidance_teacher_name,
         output_model.debate_score_model,
-        date_catalog
+        date_catalog,
+        output_model.debate_word_path,
+        output_model.template_key_year,
+        output_model.template_key_month,
+        output_model.template_key_day
     )
 
 
