@@ -158,6 +158,11 @@ def btn_clicked():
     teacher_word_path = teacher_word_file_path_entry.get().strip()
     output_path = output_path_entry.get().strip()
 
+    # 日期
+    year_time = year_time_entry.get().strip()
+    month_time = month_time_entry.get().strip()
+    day_time = day_time_entry.get().strip()
+
     if CommonTools.is_empty_or_none(rating_excel_path):
         tk.messagebox.showerror(
             title="Empty Fields!", message="Please enter Rating Excel FileName.")
@@ -177,6 +182,19 @@ def btn_clicked():
     if CommonTools.is_empty_or_none(output_path):
         tk.messagebox.showerror(
             title="Invalid Path!", message="Enter a valid output path.")
+        return
+
+    if CommonTools.is_empty_or_none(year_time):
+        tk.messagebox.showerror(
+            title="Empty Fields!", message="Please enter Year.")
+        return
+    if CommonTools.is_empty_or_none(month_time):
+        tk.messagebox.showerror(
+            title="Empty Fields!", message="Please enter Month.")
+        return
+    if CommonTools.is_empty_or_none(day_time):
+        tk.messagebox.showerror(
+            title="Empty Fields!", message="Please enter Day.")
         return
 
     output = Path(output_path + "").expanduser().resolve()
@@ -205,9 +223,9 @@ def btn_clicked():
                                                     comment_word_path,
                                                     debate_word_path,
                                                     teacher_word_path,
-                                                    DEFAULT_TIME.year,
-                                                    DEFAULT_TIME.month,
-                                                    DEFAULT_TIME.day,
+                                                    year_time,
+                                                    month_time,
+                                                    day_time,
                                                     output),
                                               name="my_task_thread")
             # start thread
