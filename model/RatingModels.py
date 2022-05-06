@@ -420,13 +420,4 @@ class OutputModel(object):
         return self.__str__()
 
 
-def test():
-    """
-    测试方法
-    @return: None
-    """
-    pass
 
-
-if __name__ == "__main__":
-    test()

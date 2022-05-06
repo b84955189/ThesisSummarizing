@@ -160,6 +160,7 @@ def my_task(rating_excel_path,
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+
 def btn_clicked():
     rating_excel_path = rating_excel_file_path_entry.get().strip()
     comment_word_path = comment_word_file_path_entry.get().strip()
@@ -502,7 +503,3 @@ def start():
     window.mainloop()
 
 
-if __name__ == "__main__":
-    # q = Queue()
-    # print(ASSETS_PATH)
-    start()

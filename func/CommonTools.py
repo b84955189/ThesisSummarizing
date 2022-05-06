@@ -33,15 +33,4 @@ def write_error(path, mode, text_list):
         f.writelines(text_list)
 
 
-def test():
-    """
-    测试方法
-    @return:
-    """
-    s = None
-    print(is_empty_or_none(s))
-
-
-if __name__ == "__main__":
-    test()
 
