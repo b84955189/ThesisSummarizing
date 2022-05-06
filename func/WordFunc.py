@@ -209,46 +209,5 @@ def handle_output_model(output_model, date_catalog):
     )
 
 
-def test():
-    """
-    测试方法
-    @return: None
-    """
-    template_path = Path(__file__).parent.parent / Path("./template")
-    file_path = template_path / Path("./debate-score.docx")
-    print(template_path)
-    document = Document(file_path)
-    # 因为模板中只有一个表格对象
-    table = document.tables[0]
-    # 遍历段落
-    for paragraph in document.paragraphs:
-        for run in paragraph.runs:
-            # if MAJOR_KEY in run.text:
-            #     print(run)
-            print(run.text)
-            # run.text = run.text.replace(KEY_MAJOR, "计算机科学与技术")
-            # run.text = run.text.replace(KEY_STU_NAME, "刘龙龙")
-    for row in range(len(table.rows)):
-        # 遍历 表格-行的每列值
-        for cell_value in table.rows[row].cells:
-            for paragraph in cell_value.paragraphs:
-                for run in paragraph.runs:
-                    # if MAJOR_KEY in run.text:
-                    #     print(run)
-                    print(run.text)
-
-
-    # 储存新文件
-    document.save(template_path / Path("./new.docx"))
-    # 测试创建目录
-    # parents：如果父目录不存在，是否创建父目录。
-    # exist_ok：只有在目录不存在时创建目录，目录已存在时不会抛出异常。
-    # (template_path / Path(f'./{datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d-%H-%M-%S")}')).mkdir(
-    #     parents=True, exist_ok=True)
-    # generate_word_to_file()
-
-
-if __name__ == "__main__":
-    test()
 
 

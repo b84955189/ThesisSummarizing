@@ -171,28 +171,3 @@ def reorganization_data(debate_scores_and_error, comment_scores_and_error, teach
     return output_models, error
 
 
-def test():
-    """
-    测试方法
-    @return: None
-    """
-    wb = get_workbook("D:\\Projects\\Python\\ThesisSummarizing\\template\\rating-information.xlsx")
-    # for k, v in get_debate_scores_data(wb).items():
-    #     print(k, v)
-    for k, v in get_data_from_sheet(wb[COMMENT_SCORE_SHEET_NAME], SheetType.COMMENT_SCORES_SHEET).items():
-        print(k, v)
-
-    # for k, v in get_teacher_scores_data(wb).items():
-    #     print(k, v)
-    # for k in get_debate_scores_data(wb).keys():
-    #     print(k)
-    # for temp in reorganization_data(get_debate_scores_data(wb), get_comment_scores_data(wb),
-    #                                 get_teacher_scores_data(wb)):
-    #     print(temp)
-    # for k, v in get_data_from_sheet(wb[TEACHER_SCORE_SHEET_NAME], SheetType.TEACHER_SCORES_SHEET).items():
-    #     print(k, v)
-    close_workbook(wb)
-
-
-if __name__ == "__main__":
-    test()
