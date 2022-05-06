@@ -115,10 +115,8 @@ def get_data_from_sheet(sheet, sheet_type):
                 raise DuplicatedRatingRecordException(f"学号:【{model.student_number}】姓名：【{model.student_name}】的评分记录在【{sheet}】表的第【{row}】行重复（已忽略该重复记录）。\n")
         # 记录错误信息
         except InvalidRatingRecordException as invalidRatingRecord:
-            print("无效信息错误:", invalidRatingRecord)
             error.append(str(invalidRatingRecord))
         except DuplicatedRatingRecordException as duplicatedRatingRecordException:
-            print("重复信息错误:", duplicatedRatingRecordException)
             error.append(str(duplicatedRatingRecordException))
         finally:
             pass
