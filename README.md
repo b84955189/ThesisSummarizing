@@ -7,9 +7,9 @@
 ### Translation
 
 
-[简体中文](/b84955189/thesis-summarizing/blob/master/docs/README.zh-CN.md)
+[简体中文](//b84955189/thesis-summarizing/blob/master/docs/README.zh-CN.md)
 
-[English](/b84955189/thesis-summarizing/blob/master/README.md)
+[English](//b84955189/thesis-summarizing/blob/master/README.md)
 
 ---------
 ### Introduce
