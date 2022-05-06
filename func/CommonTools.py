@@ -21,6 +21,18 @@ def is_empty_or_none(s):
     return s is None or len(s.strip()) == 0
 
 
+def write_error(path, mode, text_list):
+    """
+    记录错误信息
+    @param path:
+    @param mode:
+    @param text_list:
+    @return:
+    """
+    with open(path, mode, encoding="utf-8") as f:
+        f.writelines(text_list)
+
+
 def test():
     """
     测试方法

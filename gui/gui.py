@@ -10,6 +10,7 @@ GUI界面
 TODO: 重构冗余代码
 TODO: 中英文语言统一化处理
 """
+import logging
 import time
 import datetime
 import webbrowser
@@ -22,7 +23,7 @@ import threading
 from func import ExcelFunc, CommonTools
 from func.WordFunc import handle_output_model
 from model.Config import Configs
-from model.EnumModel import SheetType
+from model.EnumModels import SheetType
 
 ROOT_PATH = Path(__file__).parent.parent
 ASSETS_PATH = ROOT_PATH / Path("./assets")
@@ -120,12 +121,13 @@ def my_task(rating_excel_path,
         comment_scores_sheet = wb[ExcelFunc.COMMENT_SCORE_SHEET_NAME]
         debate_scores_sheet = wb[ExcelFunc.DEBATE_SCORE_SHEET_NAME]
         teacher_scores_sheet = wb[ExcelFunc.TEACHER_SCORE_SHEET_NAME]
+        # 输出对象 与 异常
+        output_models_and_error = ExcelFunc.reorganization_data(
+            ExcelFunc.get_data_from_sheet(debate_scores_sheet, SheetType.DEBATE_SCORES_SHEET),
+            ExcelFunc.get_data_from_sheet(comment_scores_sheet, SheetType.COMMENT_SCORES_SHEET),
+            ExcelFunc.get_data_from_sheet(teacher_scores_sheet, SheetType.TEACHER_SCORES_SHEET))
         # 生成Word
-        for output_model in ExcelFunc.reorganization_data(
-                ExcelFunc.get_data_from_sheet(debate_scores_sheet, SheetType.DEBATE_SCORES_SHEET),
-                ExcelFunc.get_data_from_sheet(comment_scores_sheet, SheetType.COMMENT_SCORES_SHEET),
-                ExcelFunc.get_data_from_sheet(teacher_scores_sheet, SheetType.TEACHER_SCORES_SHEET),
-        ):
+        for output_model in output_models_and_error[0]:
             output_model.comment_word_path = comment_word_path
             output_model.debate_word_path = debate_word_path
             output_model.teacher_word_path = teacher_word_path
@@ -136,14 +138,18 @@ def my_task(rating_excel_path,
             output_model.output_directory_path = output_path
 
             handle_output_model(output_model, date_catalog)
-
+        # 生成异常信息文件
+        error_file_catalog_path = date_catalog / Path("./错误信息")
+        error_file_catalog_path.mkdir(parents=True, exist_ok=True)
+        error_output_file_path = error_file_catalog_path / Path("错误信息.txt")
+        CommonTools.write_error(error_output_file_path, 'w+', output_models_and_error[1])
         # ---------------
         window.after(0, change_generate_button_state, True, "Generate word file successfully!")
     except Exception as e:
         # 错误提示
         window.after(0, change_generate_button_state, True, "An error occurred, please try again!", 2)
         # dev
-        print("错误：", e)
+        logging.exception(e)
         pass
     finally:
         # 关闭数据信息工作簿

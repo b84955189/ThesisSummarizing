@@ -116,7 +116,7 @@ def generate_word_by_rating_sheet(student_number,
     for paragraph in document.paragraphs:
         # 遍历run块
         for run in paragraph.runs:
-            # TODO: 加个判断
+            # 不加判断也可，不报错
             run.text = run.text.replace(KEY_MAJOR, rating_model.major)
             run.text = run.text.replace(KEY_STU_NUMBER, rating_model.student_number)
             run.text = run.text.replace(KEY_STU_NAME, rating_model.student_name)

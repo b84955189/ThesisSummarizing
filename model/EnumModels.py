@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 """
-@File    :   EnumModel.py    
+@File    :   EnumModels.py
 @Contact :   lking@lking.icu
 @Author :    Jason
 @Date :      2022/5/1 15:42
