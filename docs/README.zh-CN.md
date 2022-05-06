@@ -7,9 +7,9 @@
 ### 翻译
 
 
-[简体中文](/b84955189/thesis-summarizing/blob/master/docs/README.zh-CN.md)
+[简体中文](https://gitee.com/b84955189/thesis-summarizing/blob/master/docs/README.zh-CN.md)
 
-[English](/b84955189/thesis-summarizing/blob/master/README.md)
+[English](https://gitee.com/b84955189/thesis-summarizing/blob/master/README.md)
 
 ---------
 ### 介绍
@@ -21,7 +21,7 @@ GUI文件是由Parth Jadhav的Tkinter Designer生成的。
 
 > 仓库: [https://github.com/ParthJadhav/Tkinter-Designer](https://github.com/ParthJadhav/Tkinter-Designer)
 ##### 示例
-![示例图片](/b84955189/thesis-summarizing/raw/master/docs/img/example.png)
+![示例图片](https://gitee.com/b84955189/thesis-summarizing/raw/master/docs/img/example.png)
 #### 第三方模块
 ##### openpyxl
 一个关于读写Excel文件的Python库。
